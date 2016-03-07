@@ -6,6 +6,7 @@ import sys
 
 try:
     #open file
+   #  bannedip = open('/root/bannedips', 'w')
     file = open('/var/log/auth.log')
     # create empty list
     ips = []
@@ -19,14 +20,15 @@ try:
         if regex is not None and regex not in ips:
             ips.append(regex)
 
-    # loop through the list
-    for ip in ips:
-	add = "".join(ip)
-	if add is not '':
+#	with open("/root/bannedips", "ab") as bip:
+# loop through the list
+	    for ip in ips:
+		add = "".join(ip)
+		if add is not '':
 #leaving in as learning - Not needed- text = add.strip('[')
-		with open('/home/root/bannedip', 'a') as bannedip:
-			bannedip.write(add + "\n")
-		bannedip.close()
+			with open('/root/bannedips', 'a') as bip:
+				bip.write(add + "\n")
+				bip.close()
     # close file
     file.close()
 
