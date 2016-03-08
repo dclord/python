@@ -1,7 +1,18 @@
+# DO NOT USE - USE NEXT VERSION INSTEAD
+
 #!/usr/bin/python
 
 import re
 import sys
+
+def remove_duplicates(ipaddr):
+    output = []
+    seen = set()
+    for ip in ipaddr:
+        if ip not in seen:
+            output.append(ip)
+            seen.add(ip)
+        return output
 
 
 try:
@@ -26,12 +37,16 @@ try:
 		add = "".join(ip)
 		if add is not '':
 #leaving in as learning - Not needed- text = add.strip('[')
-			with open('/tmp/bannedips', 'a') as bip:
-				bip.write(add + "\n")
+			with open('/root/bannedips', 'a') as bip:
+		                ipaddr = add
+              			result = remove_duplicates(ipaddr)
+				bip.write(result)
+#				bip.write(result + "\n")
 				bip.close()
     # close file
     file.close()
 
 except IOError as err:
 	print('oops error: %s') % err
+
 
