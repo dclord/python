@@ -26,7 +26,7 @@ try:
 		add = "".join(ip)
 		if add is not '':
 #leaving in as learning - Not needed- text = add.strip('[')
-			with open('/root/bannedips', 'a') as bip:
+			with open('/tmp/bannedips', 'a') as bip:
 				bip.write(add + "\n")
 				bip.close()
     # close file
