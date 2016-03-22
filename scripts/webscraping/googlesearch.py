@@ -22,5 +22,5 @@ assert "No Results Found" not in driver.page_source
 #wait 600 seconds
 driver.implicitly_wait(600)
 
-#close browser 
+#close browser
 driver.close()
