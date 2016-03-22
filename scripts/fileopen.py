@@ -23,3 +23,10 @@ with open('/var/log/auth.log', r) as f:
     for line in f:
         mo = ipaddr.search(f)
         print(f)
+
+import re
+with open('test', 'r') as f:
+    rx = re.compile(r'^[:\)|:\()+%]')
+    for line in f:
+        x =  rx.search(f)
+        print(f)
