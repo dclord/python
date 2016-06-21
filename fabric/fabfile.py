@@ -3,8 +3,8 @@
 
 from fabric.api import *
 
-env.user = 'dan'
-env.hosts = ['jb', 'apache', 'ns01', 'zabbix']
+env.user = 'user'
+env.hosts = ['mail01', 'web01', 'ns01', 'zabbix']
 
 @parallel
 def aptupd():
