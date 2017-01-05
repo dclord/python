@@ -1,0 +1,83 @@
+#!/usr/bin/python
+from sys import exit
+attacks = ["   Engage", "   Run", "   Sneak"]
+# engage_list = ["Engage", "engage", "e"]
+health = 100
+playerdata = "input"
+level = 1
+
+def engage():
+    global health, level
+    print "Argh, We've been attacked attack"
+    print "Lose 10 damage"
+    health = health - 10
+    ## build level dependancy for different damange values
+    print "Your health is now: %d" % health
+    return
+
+def userinput(playerdata):
+    global level
+    print "What do you do?"
+    ## if statement to check if level is 6
+    ## if lvl 6 return differnt options
+    for attack in attacks:
+        print attack
+
+    next = raw_input("> ")
+
+    if next == "Engage" or "engage" or "e":
+        engage()
+        if level == 1 or 3 or 4:
+            level = level + 1
+        elif level == 2 or 5:
+            level = level - 1
+        else:
+            level = 1
+
+    elif next == "Sneak" or "sneak" or "s":
+        sneak()
+    elif next == "Health" or "health":
+        print health
+    elif next == "Run" or "next" or "n":
+        print "thanks"
+    else:
+        print "oops"
+    return
+
+def swordsmen():
+    global level
+    level = 1
+    print "You have entered a room full of swordmen"
+    print "They are highly dangerous"
+    next = userinput(playerdata)
+    #print "What do you do?"
+    # for attack in attacks:
+    #     print attack
+    #
+    # next = raw_input("> ")
+    #
+    # if next == "Engage" or "engage" or "e":
+    #     engage()
+    # elif next == "Sneak" or "sneak" or "s":
+    #     sneak()
+    # elif next == "Health" or "health":
+    #     print health
+    # elif next == "Run" or "next" or "n":
+    #     print "thanks"
+    # else:
+    #     print "oops"
+    print "Moving on to the next level"
+    # print level
+    magicians()
+
+def magicians():
+    global level
+    # print level
+    print "You have entered a dark and eerie room."
+    print "You are confronted by a band of ghosts"
+    print "Don't let them spook you!"
+    next = userinput(playerdata)
+    print "Well done, we'll continue!"
+    ## call next function
+
+swordsmen()
