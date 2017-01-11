@@ -1,0 +1,80 @@
+#!/usr/bin/python
+from random import randint
+
+class Char:
+    def __init__(self):
+        self.name = ""
+        self.health = 1
+        self.health_max = 1
+
+    def damage(self, enemy):
+        chardamage = randint(0, self.health)
+        enemy.health = enemy.health - chardamage
+        if chardamage == 0:
+            print "%s evades %s's attack" % (enemy.name, self.name)
+        else:
+            print "%s hurts %s" % (self.name, enemy.name)
+        return enemy.health <= 0
+
+
+class Enemy(Char):
+    def __init__(self, player):
+        Char.__init__(self)
+        self.name = "Goblin"
+        self.health = randint(1, 1000)
+
+
+class Player(Char):
+    def __init__(self):
+        Char.__init__(self)
+        self.health = 1000
+        self.health_max = 1000
+
+    def quit(self):
+        print "%s can't find the way back home and dies." % self.name
+
+
+    def help(self):
+        print Commands.keys()
+
+    def stats(self):
+        print "---------Player Stats---------"
+        print "Health:", self.health
+
+    def run(self):
+        print "---------Run---------"
+        pass
+
+    def explore(self):
+        print "---------Explore---------"
+        pass
+
+    def attack(self):
+        print "---------attack---------"
+        pass
+
+def enemy_attacks(self):
+    if self.enemy.do_damage(self):
+        print "%s was attacked by %s" % (self.name, self.enemy)
+
+Commands = {
+    'quit': Player.quit,
+    'help': Player.help,
+    'stats': Player.stats,
+    'run': Player.run,
+    'explore': Player.explore,
+    'attack': Player.attack
+}
+
+p = Player()
+p.name = raw_input("Enter Character Name: ")
+print "Type help for a list of actions\n"
+print "%s, lets begin..." % p.name
+
+while (p.health > 0):
+    line = raw_input("> ")
+    if line in Commands:
+        Commands[line](p)
+        break
+    else:
+        print "Doesn't understand"
