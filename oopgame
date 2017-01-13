@@ -1,28 +1,59 @@
 #!/usr/bin/python
 from random import randint
+import random
+
 
 class Char:
     def __init__(self):
         self.name = ""
-        self.health = 1
-        self.health_max = 1
+        self.health = 1000
 
-    def damage(self, enemy):
+    def damage(self, Enemy):
+        print "Attack Time"
+        print "Health ", Enemy.finalmonster
+
+
         chardamage = randint(0, self.health)
-        enemy.health = enemy.health - chardamage
-        if chardamage == 0:
-            print "%s evades %s's attack" % (enemy.name, self.name)
-        else:
-            print "%s hurts %s" % (self.name, enemy.name)
-        return enemy.health <= 0
 
+        if chardamage == 0:
+            print "%s evades %s's attack" % (monsters.name, self.name)
+        else:
+            print "%s hurts %s" % (self.name, monsters.name)
+        return monsterhealth <= 0
 
 class Enemy(Char):
-    def __init__(self, player):
+    def __init__(self):
         Char.__init__(self)
-        self.name = "Goblin"
-        self.health = randint(1, 1000)
+        print "Get Ready"
+        ## Self instance to call Selectmonster to continue battle
+        self.monsterhealth = self.selectmonster()
 
+    def selectmonster(self):
+        ## Monsters List
+        monsters = ['Goblin', 'Dragon', 'Swordsman', 'Archers', 'Axemen', 'Infantry']
+        print monsters
+
+        # Select random monster from list
+        monsters = random.choice(monsters)
+
+        print "Random", monsters
+
+        # Dict of monster health
+        monsterhealth = {
+            'Goblin': 500, 'Dragon': 1200, 'Swordsman': 800, 'Archers': 650, 'Axemen': 700, 'Infantry': 900
+        }
+        print "Monster Health prior: ", monsterhealth
+
+        # iterate through dict, print if monsters match a key
+        for key, value in monsterhealth.items():
+            if monsters in key:
+                print "For Loop ", monsters
+                print "For Loop ", value
+                # Calls Char Class
+                finalmonster = monsters
+                finalhealth = value
+                print "Final Monster %s and final value %d" % (finalmonster, finalhealth)
+                Char.damage(self, finalmonster)
 
 class Player(Char):
     def __init__(self):
@@ -32,7 +63,6 @@ class Player(Char):
 
     def quit(self):
         print "%s can't find the way back home and dies." % self.name
-
 
     def help(self):
         print Commands.keys()
@@ -50,12 +80,14 @@ class Player(Char):
         pass
 
     def attack(self):
-        print "---------attack---------"
-        pass
+        print "attacking"
+        ## Calls enemy to begin selecting monster
+        Enemy()
+        print "returning"
 
-def enemy_attacks(self):
-    if self.enemy.do_damage(self):
-        print "%s was attacked by %s" % (self.name, self.enemy)
+    #
+    # def enemy_attacks(self, selectmonster):
+    #     selectmonster()
 
 Commands = {
     'quit': Player.quit,
