@@ -1,0 +1,28 @@
+#!/usr/bin/python3
+import re
+
+# Regex to match ip address
+failedmatch = re.compile(r'Failed password')
+failedusermatch = re.compile(r'user (.*)')
+ipaddrmatch = re.compile(r'\d\d\d.\d\d\d.\d\d\d.\d\d\d')
+
+## open log file
+f = open("iplog.txt")
+
+# take each line in the file and read into line variable
+for line in f.readlines():
+    # Filter out only failed logins
+    if failedmatch.search(line) is not None:
+        x = failedmatch.search(line)
+        # For failed logins, extract the IP address
+        if ipaddrmatch.search(x) is not None:
+            y = ipaddrmatch.search(x)
+            print(y)
+            fy = open('ipaddroutput.txt', 'a')
+            fy.write(str(y.group(0)))
+            fy.write("\n")
+            fy.close()
+
+    else:
+        print "Error"
+
