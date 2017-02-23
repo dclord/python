@@ -1,0 +1,8 @@
+#!/usr/bin/python
+from ipwhois import IPWhois
+
+t = IPWhois('ip address')
+y = t.lookup_whois()
+x = y["nets"][0]['emails']
+x = '\n'.join(x)
+print x
