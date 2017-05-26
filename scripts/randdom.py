@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import random
 import urllib
+import sys
 
 def generate():
     d = ['.com', '.org', '.co.uk', '.org.uk']
@@ -13,6 +14,7 @@ def get(l):
     try:
         urllib.urlopen(l)
         print "Connected" + l
+        sys.exit()
     except Exception, e:
         print "Unable to connect - " + l
 
