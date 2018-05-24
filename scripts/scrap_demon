@@ -1,0 +1,20 @@
+#!/usr/bin/python3
+from bs4 import BeautifulSoup
+import urllib.request
+
+# Load page
+l = urllib.request.urlopen("https://www.amazon.co.uk/dp/B0749YXKYZ/ref=gw_comb_Rd_qh_SpringBank18_5?pf_rd_p=703a9c6a-a68c-4982-a927-fae304f69b06&pf_rd_r=K6VTR8ZPHTSVWM0V9CE4")
+
+# Read loaded page 
+lr = l.read()
+
+# Initiate BS
+s = BeautifulSoup(lr, "html5lib")
+
+# Find span with class of a-size-medium & a-color-price
+m = s.find('span', {'class' : 'a-size-medium a-color-price'})
+
+# Print span text 
+print(m.text)
+
+
