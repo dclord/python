@@ -63,26 +63,19 @@ def selenium(url):
 def elite():
     print("-------------------------- Elite Jobs --------------------------")
 
-    # downloads url via get_url function & parses with BS4
-    #urls = ["https://applythis.net/elitegroup/search/results/all/1", "https://applythis.net/elitegroup/search/results/all/2"]
     urls = ["https://applythis.net/elitegroup/search/results/all/1"]
     # Iterate url list and call above function to download HTML
     for url in urls:
         response = get_url(url)
 
-    # Check if returned value isn't None and parse with BS
     if response is not None:
         html = BeautifulSoup(response, 'html.parser')
-
-        # Find tags on page for job listings
         jobs = html.findAll('tr', {'class': 'mpatsresultsrow'})
 
-        # Iterate through listings - Identify tags for title (t) and salary (s)
         for job in jobs:
             t = job.find('h2', {'class':'rule'})
             s = job.find('p', {'class': 'mpatsoverviewsalary'})
 
-            # Check if t and s are not none then print title/salary
             if t and s:
                 t = t.text.strip()
                 s = s.text.strip()
@@ -111,7 +104,7 @@ def gamma():
             else:
                 job = job.text.strip()
                 print(job)
-
+                
 def ukfast():
     print("-------------------------- UkFast Jobs --------------------------")
 
@@ -159,9 +152,6 @@ def daisy():
                 for job in job:
                     print(job.text)
 
-
-
-
 def talktalk():
     print("-------------------------- TalkTalk Jobs --------------------------")
 
@@ -182,7 +172,6 @@ def talktalk():
         #         # job = job.text.strip()
         for job in jobs:
             print(str(job.text.strip()))
-
 
 def vodafone():
     print("-------------------------- Vodafone Jobs --------------------------")
