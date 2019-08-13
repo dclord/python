@@ -1,6 +1,7 @@
 import requests
 import json
 import turtle
+import time
 
 print("-------- ISS Crew --------")
 url = "http://api.open-notify.org/astros.json"
@@ -38,6 +39,25 @@ iss.setheading(90)
 
 iss.penup()
 iss.goto(float(lon), float(lat))
-turtle.exitonclick() 
 
+# Wigan Location
+lat = 53.5451
+lon = -2.6325
 
+location = turtle.Turtle()
+location.penup()
+location.color('yellow')
+location.goto(lon,lat)
+location.dot(5)
+location.hideturtle()
+
+url = "http://api.open-notify.org/iss-pass.json"
+url = url + '?lat=' + str(lat) + '&lon=' + str(lon)
+response = requests.get(url)
+result = response.json()
+
+over = result['response'][1]['risetime']
+style = ('Arial', 12, 'bold')
+location.write(time.ctime(over), font=style)
+
+turtle.exitonclick()
