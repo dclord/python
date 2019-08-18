@@ -3,20 +3,22 @@ from requests.exceptions import RequestException
 from contextlib import closing
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from datetime import datetime as dt
+import mysql.connector as maria
 import time
 
 """
 Sites: 
-DONE - Elite Telecom - https://elitegroup.com/careers/current-opportunities/ 
-DONE - Gamma Telecom -  https://gamma.co.uk/about-us/careers/
-DONE - UKFast - https://ukfast.co.uk/careers.html
-DONE - Chess - https://chessict.co.uk/culture/join-us/
-ONGOING - Daisy - Selenium - https://careers.smartrecruiters.com/DaisyGroup1
-DONE - TalkTalk - https://careers.talktalk.co.uk/why-talktalk/latest-job-at-talktalk
-DONE - Vodafone - https://careers.vodafone.co.uk/jobs?q=&options=,701&page=1 / https://careers.vodafone.co.uk/jobs?q=&options=,701&page=2
-DONE - Selenium - Claranet -https://www.claranet.co.uk/about-us/careers/jobs/all 
+DONE - SQL - Elite Telecom - https://elitegroup.com/careers/current-opportunities/ 
+DONE - SQL - Gamma Telecom -  https://gamma.co.uk/about-us/careers/
+DONE - SQL - UKFast - https://ukfast.co.uk/careers.html
+DONE - SQL - Chess - https://chessict.co.uk/culture/join-us/
+ONGOING - SQL - Daisy - Selenium - https://careers.smartrecruiters.com/DaisyGroup1
+DONE - SQL - TalkTalk - https://careers.talktalk.co.uk/why-talktalk/latest-job-at-talktalk
+DONE - SQL - Vodafone - https://careers.vodafone.co.uk/jobs?q=&options=,701&page=1 / https://careers.vodafone.co.uk/jobs?q=&options=,701&page=2
+DONE - SQL - Selenium - Claranet -https://www.claranet.co.uk/about-us/careers/jobs/all 
 """
-
+statement = []
 def get_url(url):
     # Attempt to download url content
     try:
@@ -70,8 +72,24 @@ def selenium(url):
             return None
         driver.close()
 
+def db(statement):
+    maria_connection = maria.connect(user='<db username>', password='<db password>', database='telcojobs')
+    cursor = maria_connection.cursor()
+    # Interate through statement list of prepared strings 
+    date = dt.today().strftime('%y-%m-%d')
+    for state in statement:
+        # Split string and assign to 4 variables 
+        company, role, location, salary = state.split(";")
+        # Insert statement into database - Today's date / Company / Role / Location / Salary 
+        cursor.execute("INSERT INTO telcojobs.jobs (date, company, role, location, salary) VALUES (%s, %s,%s,%s,%s)", (date, company, role, location, salary))
+    print("Database updated")
+
+    # Commit changes to database
+    maria_connection.commit()
+    print("Commited to database")
+
 def elite():
-    print("-------------------------- Elite Jobs --------------------------")
+    company = "Elite"
     url = "https://applythis.net/elitegroup/search/results/all/1"
 
     response = get_url(url)
@@ -89,16 +107,24 @@ def elite():
                 t = t.text.strip()
                 s = s.text.strip()
                 s = s.split("Salary")
-                # Extract salary
+                # Extract salary (s)
                 for s in s:
                     s = s.split(" per")
                     del s[-1]
                     s = [s.split(" £") for s in s]
                     for s in s:
-                            print(t + " - " + str(s[1]))
+                            # Extract salary from list
+                            s = s[1]
+                            # Split Role (t) & Location (l) into seperate variables
+                            t, l = t.split("-")
+                            # Prepare string statement to insert into SQL - Format: Company; role; location; salary
+                            prepstring = "%s; %s; %s; %s" % (company, t, l, s)
+                            # Append prepstring to statement list
+                            statement.append(prepstring)
+        print("Completed - %s jobs" % (company))
 
 def gamma():
-    print("-------------------------- Gamma Jobs --------------------------")
+    company = "Gamma"
     url = "https://www.gamma.co.uk/about-us/careers/"
 
     response = get_url(url)
@@ -111,10 +137,12 @@ def gamma():
                 apply.decompose()
             else:
                 job = job.text.strip()
-                print(job)
+                prepstring = "%s; %s; null; null" % (company, job)
+                statement.append(prepstring)
+    print("Completed - %s jobs" % (company))
 
 def ukfast():
-    print("-------------------------- UkFast Jobs --------------------------")
+    company = "UkFast"
     url = "https://www.ukfast.co.uk/careers.html"
 
     response = get_url(url)
@@ -122,10 +150,12 @@ def ukfast():
         html = BeautifulSoup(response, 'html.parser')
         jobs = html.findAll('td', {'class': 'title'})
         for job in jobs:
-            print(job.text)
+            prepstring = "%s; %s; null; null" % (company, job.text)
+            statement.append(prepstring)
+    print("Completed - %s jobs" % (company))
 
 def chess():
-    print("-------------------------- Chess Jobs --------------------------")
+    company = "Chess"
     url = "https://chessict.co.uk/culture/careers/"
 
     response = get_url(url)
@@ -136,10 +166,12 @@ def chess():
             if job.text == "":
                 break
             else:
-                print(job.text)
+                prepstring = "%s; %s; null; null" % (company, job.text)
+                statement.append(prepstring)
+    print("Completed - %s jobs" % (company))
 
 def daisy():
-    print("-------------------------- Daisy Jobs --------------------------")
+    company = "Daisy"
     url = "https://careers.smartrecruiters.com/DaisyGroup1"
 
     response = selenium(url)
@@ -152,10 +184,13 @@ def daisy():
                 if l in x.text:
                     job = x.findAll('h4', {'class': 'details-title job-title link--block-target'})
                     for job in job:
-                        print(job.text + " - " + l)
+                        prepstring = "%s; %s; %s; null" % (company, job.text, l)
+                        statement.append(prepstring)
+    print("Completed - %s jobs" % (company))
 
 def talktalk():
-    print("-------------------------- TalkTalk Jobs --------------------------")
+    company = "TalkTalk"
+    #print("-------------------------- %s Jobs --------------------------" % (company))
     url = "https://careers.talktalk.co.uk/why-talktalk/latest-job-at-talktalk"
 
     response = get_url(url)
@@ -164,10 +199,13 @@ def talktalk():
         jobs = html.findAll('h4', {'class': 'job-feed__title'})
         for job in jobs:
             # Strip whitespace from text output
-            print(str(job.text.strip()))
+            output = job.text.strip("\n")
+            prepstring = "%s; %s; null; null" % (company, output)
+            statement.append(prepstring)
+    print("Completed - %s jobs" % (company))
 
 def vodafone():
-    print("-------------------------- Vodafone Jobs --------------------------")
+    company = "Vodafone"
     url = ["https://careers.vodafone.co.uk/jobs?q=&options=,701&page=1", "https://careers.vodafone.co.uk/jobs?q=&options=,701&page=2", "https://careers.vodafone.co.uk/jobs?q=&options=,701&page=3"]
 
     for url in url:
@@ -176,10 +214,12 @@ def vodafone():
             html = BeautifulSoup(response, 'html.parser')
             jobs = html.findAll('span', {'class': 'inner-title'})
             for job in jobs:
-                print(job.text)
+                prepstring = "%s; %s; null; null" % (company, job.text)
+                statement.append(prepstring)
+    print("Completed - %s jobs" % (company))
 
 def claranet():
-    print("-------------------------- Claranet Jobs --------------------------")
+    company = "Claranet"
     url = "https://www.claranet.co.uk/about-us/careers/jobs/all"
 
     # Call selenium session to extract html
@@ -188,10 +228,12 @@ def claranet():
         html = BeautifulSoup(response, 'html.parser')
         jobs = html.findAll('div', {'class': 'job_title'})
         for job in jobs:
-            print(job.text)
+                prepstring = "%s; %s; null; null" % (company, job.text)
+                statement.append(prepstring)
+    print("Completed - %s jobs" % (company))
 
 if __name__ == "__main__":
     companies = [elite, gamma, ukfast, chess, daisy, talktalk, vodafone, claranet]
     for c in companies:
         c()
-        print("\n")
+    db(statement);
