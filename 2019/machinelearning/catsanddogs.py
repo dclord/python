@@ -5,7 +5,7 @@ import cv2
 import random
 import pickle
 
-datadir = "C:/Users/Dan/Documents/Python3/CondaEnv/PetImages/"
+datadir = "C:/CondaEnv/PetImages/"
 categories = ["Dog", "Cat"]
 
 # for category in categories:
